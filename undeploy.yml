@@ -1,0 +1,14 @@
+- name: Undeploy webservers
+  hosts: webservers
+  tasks:
+
+    - name: Stop Apache webserver
+      service:
+          name: apache2
+          enabled: false
+          state: stopped
+
+    - name: Uninstall packages
+      apt:
+          name: apache2
+          state: absent

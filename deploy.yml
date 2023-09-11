@@ -1,0 +1,30 @@
+---
+- name: Deploy the Webservers
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Update package lists
+      apt:
+        update_cache: yes
+
+    - name: Change Listening Port to 8080
+      lineinfile:
+        path: /etc/apache2/apache2.conf
+        regexp: "^Listen 80$"
+        line: "Listen 8080"
+
+    -  name: Install Apache webserver
+       apt:
+          name: apache2
+          state: present
+
+    -  name: Start webserver
+       service:
+          name: apache2
+          state: started
+          enabled: yes
+
+    -  name: Create HTML file
+       copy:
+          dest: /var/www/html/index.html
+          content: "<html><body><h1>Hello World from SJSU-{{inventory_hostname | regex_replace('[^0-9]','')}}</h1></body></html>"
